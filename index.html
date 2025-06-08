@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Wedding Invitation</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="invitation-card">
+            <div class="garland top-garland"></div>
+            <h1>We're Getting Married!</h1>
+            <div class="couple-names">
+                <span class="name">[Your Name]</span>
+                <span class="heart">❤️</span>
+                <span class="name">[Partner's Name]</span>
+            </div>
+            
+            <div class="pixel-couple">
+                <div class="pixel-bride"></div>
+                <div class="pixel-groom"></div>
+            </div>
+            
+            <div class="date-time">
+                <p class="date">📅 [Wedding Date]</p>
+                <p class="time">⏰ [Wedding Time]</p>
+                <p class="venue">📍 [Venue Name]</p>
+            </div>
+
+            <div class="guest-counter">
+                <h2>Guest Count</h2>
+                <div class="counter">
+                    <button id="dec">–</button>
+                    <span id="count">0</span>
+                    <button id="inc">+</button>
+                </div>
+                <p class="counter-label">Number of Guests</p>
+            </div>
+
+            <div class="rsvp-section">
+                <h2>RSVP</h2>
+                <div class="rsvp-buttons">
+                    <button class="rsvp-btn attending">Will Attend</button>
+                    <button class="rsvp-btn not-attending">Can't Make It</button>
+                </div>
+            </div>
+
+            <div class="countdown">
+                <h2>Days Until Our Wedding</h2>
+                <div id="countdown-timer">Loading...</div>
+            </div>
+
+            <div class="message">
+                <p>We're excited to celebrate our special day with you!</p>
+            </div>
+            <div class="garland bottom-garland"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
