@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP - Wedding Invitation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="invitation-card">
+            <h1>RSVP</h1>
+            
+            <div class="rsvp-section">
+                <h2>Will you attend?</h2>
+                <div class="rsvp-buttons">
+                    <button id="attending" class="rsvp-btn">Yes, I'll be there!</button>
+                    <button id="not-attending" class="rsvp-btn">Sorry, can't make it</button>
+                </div>
+            </div>
+
+            <div class="guest-counter">
+                <h2>Number of Guests</h2>
+                <div class="counter-controls">
+                    <button id="decrement">-</button>
+                    <span id="count">0</span>
+                    <button id="increment">+</button>
+                </div>
+                <div class="counter-label">(including yourself)</div>
+            </div>
+
+            <div class="message">
+                <p>Thank you for your response!</p>
+                <p>We look forward to celebrating with you!</p>
+            </div>
+
+            <a href="index.html" class="back-button">Back to Invitation</a>
+        </div>
+    </div>
+    <script src="rsvp.js"></script>
+</body>
+</html> 
