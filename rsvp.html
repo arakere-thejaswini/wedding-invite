@@ -14,26 +14,8 @@
         <div class="invitation-card">
             <h1>RSVP</h1>
             
-            <div class="rsvp-section">
-                <h2>Will you attend?</h2>
-                <div class="rsvp-buttons">
-                    <button id="attending" class="rsvp-btn">Yes, I'll be there!</button>
-                    <button id="not-attending" class="rsvp-btn">Sorry, can't make it</button>
-                </div>
-            </div>
-
-            <div class="guest-counter">
-                <h2>Number of Guests</h2>
-                <div class="counter-controls">
-                    <button id="decrement">-</button>
-                    <span id="count">0</span>
-                    <button id="increment">+</button>
-                </div>
-                <div class="counter-label">(including yourself)</div>
-            </div>
-
-            <div id="game-section" class="game-section" style="display: none;">
-                <h2>Lead the Guest to the Temple</h2>
+            <div id="game-section" class="game-section">
+                <h2>Walk to the RSVP Book</h2>
                 <div class="game-container">
                     <canvas id="gameCanvas" width="400" height="300"></canvas>
                 </div>
@@ -45,8 +27,32 @@
                     </div>
                     <button id="down">↓</button>
                 </div>
-                <div class="player-progress">
-                    <h3>Player <span id="current-player">1</span> of <span id="total-players">1</span></h3>
+                <div class="game-instructions">
+                    <p>Use arrow keys or buttons to walk through the garden</p>
+                    <p>Find the RSVP book to respond</p>
+                </div>
+            </div>
+
+            <div id="rsvp-popup" class="rsvp-popup" style="display: none;">
+                <div class="popup-content">
+                    <h2>RSVP</h2>
+                    <div class="rsvp-section">
+                        <h3>Will you attend?</h3>
+                        <div class="rsvp-buttons">
+                            <button id="attending" class="rsvp-btn">Yes, I'll be there!</button>
+                            <button id="not-attending" class="rsvp-btn">Sorry, can't make it</button>
+                        </div>
+                    </div>
+
+                    <div class="guest-counter">
+                        <h3>Number of Guests</h3>
+                        <div class="counter-controls">
+                            <button id="decrement">-</button>
+                            <span id="count">0</span>
+                            <button id="increment">+</button>
+                        </div>
+                        <div class="counter-label">(including yourself)</div>
+                    </div>
                 </div>
             </div>
 

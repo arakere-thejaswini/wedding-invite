@@ -442,6 +442,7 @@ button:active {
     border: 2px solid var(--accent-color);
     box-shadow: 4px 4px 0 var(--shadow-color);
     background: #f0f0f0;
+    position: relative;
 }
 
 #gameCanvas {
@@ -473,11 +474,47 @@ button:active {
     justify-content: center;
 }
 
-.player-progress {
+.game-instructions {
     margin: 1rem 0;
-}
-
-.player-progress h3 {
     font-size: 0.8rem;
     color: var(--maroon-color);
+}
+
+.game-instructions p {
+    margin: 0.5rem 0;
+}
+
+.rsvp-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: var(--secondary-color);
+    padding: 2rem;
+    border: 2px solid var(--accent-color);
+    box-shadow: 4px 4px 0 var(--shadow-color);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.popup-content h2 {
+    color: var(--maroon-color);
+    margin-bottom: 1.5rem;
+}
+
+.popup-content h3 {
+    font-size: 0.9rem;
+    color: var(--maroon-color);
+    margin: 1rem 0;
 }
