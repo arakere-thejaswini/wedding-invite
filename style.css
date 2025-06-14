@@ -95,8 +95,32 @@ h2 {
 }
 
 .heart {
-    font-size: 1rem;
-    animation: pulse 1.5s infinite;
+    font-size: 1.2rem;
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+
+.heart::before {
+    content: '💍';
+    position: absolute;
+    animation: float-ring 2s ease-in-out infinite;
+}
+
+@keyframes float-ring {
+    0% { 
+        transform: translateY(0) rotate(0deg);
+        filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+    }
+    50% { 
+        transform: translateY(-5px) rotate(180deg);
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    }
+    100% { 
+        transform: translateY(0) rotate(360deg);
+        filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+    }
 }
 
 .pixel-couple {
