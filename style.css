@@ -431,3 +431,53 @@ button:active {
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
+
+.game-section {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.game-container {
+    margin: 1rem auto;
+    border: 2px solid var(--accent-color);
+    box-shadow: 4px 4px 0 var(--shadow-color);
+    background: #f0f0f0;
+}
+
+#gameCanvas {
+    display: block;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.horizontal-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.game-controls button {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-progress {
+    margin: 1rem 0;
+}
+
+.player-progress h3 {
+    font-size: 0.8rem;
+    color: var(--maroon-color);
+}

@@ -32,7 +32,25 @@
                 <div class="counter-label">(including yourself)</div>
             </div>
 
-            <div class="message">
+            <div id="game-section" class="game-section" style="display: none;">
+                <h2>Lead the Guest to the Temple</h2>
+                <div class="game-container">
+                    <canvas id="gameCanvas" width="400" height="300"></canvas>
+                </div>
+                <div class="game-controls">
+                    <button id="up">↑</button>
+                    <div class="horizontal-controls">
+                        <button id="left">←</button>
+                        <button id="right">→</button>
+                    </div>
+                    <button id="down">↓</button>
+                </div>
+                <div class="player-progress">
+                    <h3>Player <span id="current-player">1</span> of <span id="total-players">1</span></h3>
+                </div>
+            </div>
+
+            <div class="message" style="display: none;">
                 <p>Thank you for your response!</p>
                 <p>We look forward to celebrating with you!</p>
             </div>
