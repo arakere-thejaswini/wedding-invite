@@ -35,7 +35,7 @@ body {
 
 .invitation-card {
     background: var(--secondary-color);
-    padding: 1rem;
+    padding: 3rem 1rem 1rem 1rem;
     border: 2px solid var(--accent-color);
     box-shadow: 4px 4px 0 var(--shadow-color);
     text-align: center;
@@ -45,8 +45,8 @@ body {
     background-repeat: no-repeat;
     background-position: top center;
     background-size: contain;
-    background-blend-mode: multiply;
-    opacity: 0.95;
+    background-blend-mode: normal;
+    opacity: 1;
 }
 
 /* Add a subtle gradient overlay to ensure text remains readable */
@@ -59,9 +59,9 @@ body {
     bottom: 0;
     background: linear-gradient(
         to bottom,
-        rgba(255, 255, 255, 0.85) 0%,
-        rgba(255, 255, 255, 0.9) 50%,
-        rgba(255, 255, 255, 0.85) 100%
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.95) 30%,
+        rgba(255, 255, 255, 0.95) 100%
     );
     z-index: 0;
 }
@@ -101,6 +101,7 @@ h1 {
     margin-bottom: 0.75rem;
     text-shadow: 1px 1px 0 var(--shadow-color);
     line-height: 1.4;
+    margin-top: 1rem;
 }
 
 h2 {
