@@ -28,32 +28,58 @@ document.addEventListener('DOMContentLoaded', function() {
     const playerImg = new Image();
     const grassImg = new Image();
     const pathImg = new Image();
-    const flowersImg = new Image();
-    const treesImg = new Image();
+    const flower1Img = new Image();
+    const flower2Img = new Image();
+    const flower3Img = new Image();
+    const treeImg = new Image();
+    const tree1Img = new Image();
     const benchImg = new Image();
     const rsvpBookImg = new Image();
+    const fenceImg = new Image();
+    const butterflyImg = new Image();
+    const magicImg = new Image();
+    const cloudImg = new Image();
+    const heartImg = new Image();
 
     playerImg.src = 'images/player.png';
     grassImg.src = 'images/grass.png';
-    pathImg.src = 'images/path.png';
-    flowersImg.src = 'images/flowers.png';
-    treesImg.src = 'images/trees.png';
+    pathImg.src = 'images/garden.png';
+    flower1Img.src = 'images/flower_1.png';
+    flower2Img.src = 'images/flower_2.png';
+    flower3Img.src = 'images/flower_3.png';
+    treeImg.src = 'images/tree.png';
+    tree1Img.src = 'images/tree_1.png';
     benchImg.src = 'images/bench.png';
     rsvpBookImg.src = 'images/rsvp_book.png';
+    fenceImg.src = 'images/fence.png';
+    butterflyImg.src = 'images/butterfly.png';
+    magicImg.src = 'images/magic.png';
+    cloudImg.src = 'images/cloud.png';
+    heartImg.src = 'images/heart.png';
 
-    // Garden layout (0: grass, 1: path, 2: flowers, 3: trees, 4: bench)
+    // Garden layout (0: grass, 1: path, 2: flower1, 3: flower2, 4: flower3, 5: tree, 6: tree1, 7: bench, 8: fence)
     const gardenLayout = [
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-        [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-        [3, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 3],
-        [3, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 3],
-        [3, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 3],
-        [3, 0, 0, 1, 0, 4, 0, 0, 1, 0, 0, 3],
-        [3, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 3],
-        [3, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 3],
-        [3, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 3],
-        [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-        [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+        [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+        [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [8, 0, 2, 3, 0, 0, 0, 0, 2, 4, 0, 8],
+        [8, 0, 3, 1, 1, 1, 1, 1, 1, 3, 0, 8],
+        [8, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 8],
+        [8, 0, 0, 1, 0, 7, 0, 0, 1, 0, 0, 8],
+        [8, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 8],
+        [8, 0, 4, 1, 1, 1, 1, 1, 1, 2, 0, 8],
+        [8, 0, 2, 3, 0, 0, 0, 0, 3, 4, 0, 8],
+        [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8],
+        [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
+    ];
+
+    // Add decorative elements
+    const decorations = [
+        { img: butterflyImg, x: 3, y: 2 },
+        { img: butterflyImg, x: 8, y: 7 },
+        { img: magicImg, x: 5, y: 5 },
+        { img: cloudImg, x: 2, y: 1 },
+        { img: cloudImg, x: 9, y: 3 },
+        { img: heartImg, x: 6, y: 4 }
     ];
 
     // Game controls
@@ -113,13 +139,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 switch(tile) {
                     case 0: img = grassImg; break;
                     case 1: img = pathImg; break;
-                    case 2: img = flowersImg; break;
-                    case 3: img = treesImg; break;
-                    case 4: img = benchImg; break;
+                    case 2: img = flower1Img; break;
+                    case 3: img = flower2Img; break;
+                    case 4: img = flower3Img; break;
+                    case 5: img = treeImg; break;
+                    case 6: img = tree1Img; break;
+                    case 7: img = benchImg; break;
+                    case 8: img = fenceImg; break;
                 }
                 ctx.drawImage(img, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
+
+        // Draw decorative elements
+        decorations.forEach(dec => {
+            ctx.drawImage(dec.img, dec.x * TILE_SIZE, dec.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        });
 
         // Draw RSVP book
         ctx.drawImage(rsvpBookImg, rsvpBookPosition.x * TILE_SIZE, rsvpBookPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
