@@ -15,26 +15,27 @@
             <h1>RSVP</h1>
             
             <div id="game-section" class="game-section">
-                <h2>Walk to the RSVP Book</h2>
+                <h2>Find your way to the Temple</h2>
                 <div class="game-container">
-                    <canvas id="gameCanvas" width="400" height="300"></canvas>
+                    <canvas id="gameCanvas" width="384" height="352"></canvas>
                 </div>
                 <div class="game-controls">
                     <button id="up">↑</button>
                     <div class="horizontal-controls">
-                        <button id="left">←</button>
-                        <button id="right">→</button>
+                        <button id="left"><img src="images/arrow.png" alt="Left Arrow" class="arrow-img"></button>
+                        <button id="right"><img src="images/arrow.png" alt="Right Arrow" class="arrow-img"></button>
                     </div>
                     <button id="down">↓</button>
                 </div>
                 <div class="game-instructions">
-                    <p>Use arrow keys or buttons to walk through the garden</p>
-                    <p>Find the RSVP book to respond</p>
+                    <p>Use arrow keys or buttons to navigate through the maze</p>
+                    <p>Find your way to the temple to RSVP</p>
                 </div>
             </div>
 
             <div id="rsvp-popup" class="rsvp-popup" style="display: none;">
                 <div class="popup-content">
+                    <button id="close-popup" class="close-popup" aria-label="Close RSVP">&times;</button>
                     <h2>RSVP</h2>
                     <div class="rsvp-section">
                         <h3>Will you attend?</h3>
@@ -61,7 +62,7 @@
                 <p>We look forward to celebrating with you!</p>
             </div>
 
-            <a href="index.html" class="back-button">Back to Invitation</a>
+            <a href="index.html" class="red-btn" id="back-button">Back to Invitation</a>
         </div>
     </div>
     <script src="rsvp.js"></script>

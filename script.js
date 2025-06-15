@@ -24,3 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown();
     setInterval(updateCountdown, 1000);
 });
+
+// Play click sound on navigation links
+const navClickSound = () => {
+    const audio = new Audio('audio/click.mp3');
+    audio.play();
+};
+
+const rsvpLink = document.getElementById('rsvp-link');
+if (rsvpLink) {
+    rsvpLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        navClickSound();
+        setTimeout(() => { window.location = this.href; }, 180);
+    });
+}
+
+const backButton = document.getElementById('back-button');
+if (backButton) {
+    backButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        navClickSound();
+        setTimeout(() => { window.location = this.href; }, 180);
+    });
+}

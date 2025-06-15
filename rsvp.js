@@ -21,33 +21,28 @@ document.addEventListener('DOMContentLoaded', function() {
     let rsvpStatus = loadRSVPStatus();
     let playerPosition = { x: 1, y: 1 };
     let playerDirection = 'down';
-    let rsvpBookPosition = { x: 5, y: 5 }; // Center-ish, on the path
-    let gameStarted = false; // Start as false until images are loaded
+    let templePosition = { x: 5, y: 5 }; // Center position for the temple
+    let gameStarted = false;
 
     // Load images
     const images = {
         player: new Image(),
         grass: new Image(),
         path: new Image(),
-        flower1: new Image(),
-        flower2: new Image(),
-        flower3: new Image(),
-        tree: new Image(),
-        tree1: new Image(),
-        bench: new Image(),
-        rsvpBook: new Image(),
-        fence: new Image(),
-        butterfly: new Image(),
-        magic: new Image(),
-        cloud: new Image(),
-        heart: new Image()
+        bush: new Image(),
+        arch: new Image(),
+        cross: new Image(),
+        gate: new Image(),
+        obstruction_ud: new Image(),
+        temple: new Image()
     };
 
     // Load audio
     const audio = {
         move: new Audio('audio/move.mp3'),
         click: new Audio('audio/click.mp3'),
-        success: new Audio('audio/success.mp3')
+        success: new Audio('audio/success.mp3'),
+        bump: new Audio('audio/bump.mp3')
     };
 
     // Image loading error handling
@@ -71,41 +66,30 @@ document.addEventListener('DOMContentLoaded', function() {
     Object.entries(images).forEach(([key, img]) => {
         img.onload = handleImageLoad;
         img.onerror = (e) => handleImageError(`Failed to load ${key} image`);
-        let filename = key;
-        switch (key) {
-            case 'path': filename = 'garden'; break;
-            case 'flower1': filename = 'flower_1'; break;
-            case 'flower2': filename = 'flower_2'; break;
-            case 'flower3': filename = 'flower_3'; break;
-            case 'tree1': filename = 'tree_1'; break;
-            case 'rsvpBook': filename = 'rsvp_book'; break;
+        if (key === 'player') {
+            img.src = `images/player3.png`;
+        } else if (key === 'grass' || key === 'path') {
+            img.src = `images/grass2.png`;
+        } else if (key === 'obstruction') {
+            img.src = `images/obstruction_ud.png`;
+        } else {
+            img.src = `images/${key}.png`;
         }
-        img.src = `images/${filename}.png`;
     });
 
-    // Garden layout (0: grass, 1: path, 2: flower1, 3: flower2, 4: flower3, 5: tree, 6: tree1, 7: bench, 8: fence)
-    const gardenLayout = [
-        [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
-        [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8],
-        [8, 0, 2, 3, 0, 0, 0, 0, 2, 4, 0, 8],
-        [8, 0, 3, 1, 1, 1, 1, 1, 1, 3, 0, 8],
-        [8, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 8],
-        [8, 0, 0, 1, 0, 7, 0, 0, 1, 0, 0, 8],
-        [8, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 8],
-        [8, 0, 4, 1, 1, 1, 1, 1, 1, 2, 0, 8],
-        [8, 0, 2, 3, 0, 0, 0, 0, 3, 4, 0, 8],
-        [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8],
-        [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
-    ];
-
-    // Add decorative elements
-    const decorations = [
-        { img: images.butterfly, x: 3, y: 2 },
-        { img: images.butterfly, x: 8, y: 7 },
-        { img: images.magic, x: 5, y: 5 },
-        { img: images.cloud, x: 2, y: 1 },
-        { img: images.cloud, x: 9, y: 3 },
-        { img: images.heart, x: 6, y: 4 }
+    // Maze layout (0: grass, 1: path, 2: bush, 3: arch, 4: cross, 5: gate, 6: obstruction, 7: temple)
+    const mazeLayout = [
+        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+        [6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+        [6, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 6],
+        [6, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 6],
+        [6, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 6],
+        [6, 0, 0, 1, 0, 7, 0, 0, 1, 0, 0, 6],
+        [6, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 6],
+        [6, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 6],
+        [6, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 6],
+        [6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+        [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]
     ];
 
     // Game controls
@@ -150,83 +134,71 @@ document.addEventListener('DOMContentLoaded', function() {
             playerDirection = direction;
             drawGame();
 
-            // Check if reached RSVP book
-            if (playerPosition.x === rsvpBookPosition.x && playerPosition.y === rsvpBookPosition.y) {
+            // Check if reached temple
+            if (playerPosition.x === templePosition.x && playerPosition.y === templePosition.y) {
                 showRSVPPopup();
             }
+        } else {
+            playSound('bump');
         }
     }
 
     function isValidPath(x, y) {
-        const tile = gardenLayout[y][x];
-        // Block fences, trees, and flowers
-        return tile !== 8 && tile !== 5 && tile !== 6 && tile !== 2 && tile !== 3 && tile !== 4;
+        const tile = mazeLayout[y][x];
+        // Block obstructions (6) and bushes (2)
+        return tile !== 6 && tile !== 2;
     }
 
     function drawGame() {
-        if (!gameStarted) return; // Don't draw if images aren't loaded
+        if (!gameStarted) return;
 
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw garden
+        // Ensure image smoothing is disabled for pixel art
+        ctx.imageSmoothingEnabled = false;
+
+        // Draw maze
         for (let y = 0; y < GRID_HEIGHT; y++) {
             for (let x = 0; x < GRID_WIDTH; x++) {
-                const tile = gardenLayout[y][x];
+                const tile = mazeLayout[y][x];
                 let img;
                 switch(tile) {
                     case 0: img = images.grass; break;
                     case 1: img = images.path; break;
-                    case 2: img = images.flower1; break;
-                    case 3: img = images.flower2; break;
-                    case 4: img = images.flower3; break;
-                    case 5: img = images.tree; break;
-                    case 6: img = images.tree1; break;
-                    case 7: img = images.bench; break;
-                    case 8: img = images.fence; break;
+                    case 2: img = images.bush; break;
+                    case 3: img = images.arch; break;
+                    case 4: img = images.cross; break;
+                    case 5: img = images.gate; break;
+                    case 6: img = images.obstruction_ud; break;
+                    case 7: img = images.temple; break;
                 }
                 if (img && img.complete && img.naturalWidth !== 0) {
-                    ctx.drawImage(img, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    ctx.drawImage(img, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE + 1, TILE_SIZE + 1);
                 } else {
-                    // Fallback: draw a colored rectangle and log missing image
+                    // Fallback: draw a colored rectangle
                     ctx.fillStyle = '#ccc';
                     ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    if (img) {
-                        console.warn('Image not loaded for tile', tile, 'at', x, y);
-                    } else {
-                        console.warn('No image assigned for tile', tile, 'at', x, y);
-                    }
+                    console.warn(`Image for tile ${tile} at (${x}, ${y}) not loaded. Source: ${img ? img.src : 'N/A'}`);
                 }
             }
         }
 
-        // Draw decorative elements
-        decorations.forEach(dec => {
-            if (dec.img && dec.img.complete && dec.img.naturalWidth !== 0) {
-                ctx.drawImage(dec.img, dec.x * TILE_SIZE, dec.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            } else {
-                ctx.fillStyle = '#ffb';
-                ctx.fillRect(dec.x * TILE_SIZE, dec.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                console.warn('Decoration image not loaded at', dec.x, dec.y);
-            }
-        });
-
-        // Draw RSVP book
-        if (images.rsvpBook && images.rsvpBook.complete && images.rsvpBook.naturalWidth !== 0) {
-            ctx.drawImage(images.rsvpBook, rsvpBookPosition.x * TILE_SIZE, rsvpBookPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-        } else {
-            ctx.fillStyle = '#fbb';
-            ctx.fillRect(rsvpBookPosition.x * TILE_SIZE, rsvpBookPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            console.warn('RSVP book image not loaded');
+        // Draw temple
+        if (images.temple && images.temple.complete && images.temple.naturalWidth !== 0) {
+            ctx.drawImage(images.temple, templePosition.x * TILE_SIZE, templePosition.y * TILE_SIZE, TILE_SIZE + 1, TILE_SIZE + 1);
         }
 
         // Draw player
         if (images.player && images.player.complete && images.player.naturalWidth !== 0) {
-            ctx.drawImage(images.player, playerPosition.x * TILE_SIZE, playerPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-        } else {
-            ctx.fillStyle = '#bbf';
-            ctx.fillRect(playerPosition.x * TILE_SIZE, playerPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            console.warn('Player image not loaded');
+            const playerImg = images.player;
+            ctx.drawImage(
+                playerImg,
+                playerPosition.x * TILE_SIZE,
+                playerPosition.y * TILE_SIZE,
+                TILE_SIZE + 1,
+                TILE_SIZE + 1
+            );
         }
     }
 
@@ -330,6 +302,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const clone = audio[sound].cloneNode();
             clone.play();
         }
+    }
+
+    // Add click sound to RSVP and Back to Invitation buttons
+    const rsvpLink = document.getElementById('rsvp-link');
+    if (rsvpLink) {
+        rsvpLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            playSound('click');
+            setTimeout(() => { window.location = this.href; }, 180);
+        });
+    }
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            playSound('click');
+            setTimeout(() => { window.location = this.href; }, 180);
+        });
     }
 
     // Start the game
