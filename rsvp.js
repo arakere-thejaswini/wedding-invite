@@ -21,41 +21,67 @@ document.addEventListener('DOMContentLoaded', function() {
     let rsvpStatus = loadRSVPStatus();
     let playerPosition = { x: 1, y: 1 };
     let playerDirection = 'down';
-    let rsvpBookPosition = { x: GRID_WIDTH - 2, y: GRID_HEIGHT - 2 };
-    let gameStarted = true;
+    let rsvpBookPosition = { x: 5, y: 5 }; // Center-ish, on the path
+    let gameStarted = false; // Start as false until images are loaded
 
     // Load images
-    const playerImg = new Image();
-    const grassImg = new Image();
-    const pathImg = new Image();
-    const flower1Img = new Image();
-    const flower2Img = new Image();
-    const flower3Img = new Image();
-    const treeImg = new Image();
-    const tree1Img = new Image();
-    const benchImg = new Image();
-    const rsvpBookImg = new Image();
-    const fenceImg = new Image();
-    const butterflyImg = new Image();
-    const magicImg = new Image();
-    const cloudImg = new Image();
-    const heartImg = new Image();
+    const images = {
+        player: new Image(),
+        grass: new Image(),
+        path: new Image(),
+        flower1: new Image(),
+        flower2: new Image(),
+        flower3: new Image(),
+        tree: new Image(),
+        tree1: new Image(),
+        bench: new Image(),
+        rsvpBook: new Image(),
+        fence: new Image(),
+        butterfly: new Image(),
+        magic: new Image(),
+        cloud: new Image(),
+        heart: new Image()
+    };
 
-    playerImg.src = 'images/player.png';
-    grassImg.src = 'images/grass.png';
-    pathImg.src = 'images/garden.png';
-    flower1Img.src = 'images/flower_1.png';
-    flower2Img.src = 'images/flower_2.png';
-    flower3Img.src = 'images/flower_3.png';
-    treeImg.src = 'images/tree.png';
-    tree1Img.src = 'images/tree_1.png';
-    benchImg.src = 'images/bench.png';
-    rsvpBookImg.src = 'images/rsvp_book.png';
-    fenceImg.src = 'images/fence.png';
-    butterflyImg.src = 'images/butterfly.png';
-    magicImg.src = 'images/magic.png';
-    cloudImg.src = 'images/cloud.png';
-    heartImg.src = 'images/heart.png';
+    // Load audio
+    const audio = {
+        move: new Audio('audio/move.mp3'),
+        click: new Audio('audio/click.mp3'),
+        success: new Audio('audio/success.mp3')
+    };
+
+    // Image loading error handling
+    let loadedImages = 0;
+    const totalImages = Object.keys(images).length;
+
+    function handleImageLoad() {
+        loadedImages++;
+        if (loadedImages === totalImages) {
+            console.log('All images loaded successfully');
+            gameStarted = true;
+            drawGame();
+        }
+    }
+
+    function handleImageError(error) {
+        console.error('Error loading image:', error);
+    }
+
+    // Set up image loading
+    Object.entries(images).forEach(([key, img]) => {
+        img.onload = handleImageLoad;
+        img.onerror = (e) => handleImageError(`Failed to load ${key} image`);
+        let filename = key;
+        switch (key) {
+            case 'path': filename = 'garden'; break;
+            case 'flower1': filename = 'flower_1'; break;
+            case 'flower2': filename = 'flower_2'; break;
+            case 'flower3': filename = 'flower_3'; break;
+            case 'tree1': filename = 'tree_1'; break;
+            case 'rsvpBook': filename = 'rsvp_book'; break;
+        }
+        img.src = `images/${filename}.png`;
+    });
 
     // Garden layout (0: grass, 1: path, 2: flower1, 3: flower2, 4: flower3, 5: tree, 6: tree1, 7: bench, 8: fence)
     const gardenLayout = [
@@ -74,29 +100,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add decorative elements
     const decorations = [
-        { img: butterflyImg, x: 3, y: 2 },
-        { img: butterflyImg, x: 8, y: 7 },
-        { img: magicImg, x: 5, y: 5 },
-        { img: cloudImg, x: 2, y: 1 },
-        { img: cloudImg, x: 9, y: 3 },
-        { img: heartImg, x: 6, y: 4 }
+        { img: images.butterfly, x: 3, y: 2 },
+        { img: images.butterfly, x: 8, y: 7 },
+        { img: images.magic, x: 5, y: 5 },
+        { img: images.cloud, x: 2, y: 1 },
+        { img: images.cloud, x: 9, y: 3 },
+        { img: images.heart, x: 6, y: 4 }
     ];
 
     // Game controls
-    document.getElementById('up').addEventListener('click', () => movePlayer(0, -1, 'up'));
-    document.getElementById('down').addEventListener('click', () => movePlayer(0, 1, 'down'));
-    document.getElementById('left').addEventListener('click', () => movePlayer(-1, 0, 'left'));
-    document.getElementById('right').addEventListener('click', () => movePlayer(1, 0, 'right'));
+    ['up', 'down', 'left', 'right'].forEach(dir => {
+        document.getElementById(dir).addEventListener('click', () => {
+            switch(dir) {
+                case 'up': movePlayer(0, -1, 'up'); break;
+                case 'down': movePlayer(0, 1, 'down'); break;
+                case 'left': movePlayer(-1, 0, 'left'); break;
+                case 'right': movePlayer(1, 0, 'right'); break;
+            }
+            playSound('move');
+        });
+    });
 
     // Keyboard controls
     document.addEventListener('keydown', (e) => {
         if (!gameStarted) return;
+        let moved = false;
         switch(e.key) {
-            case 'ArrowUp': movePlayer(0, -1, 'up'); break;
-            case 'ArrowDown': movePlayer(0, 1, 'down'); break;
-            case 'ArrowLeft': movePlayer(-1, 0, 'left'); break;
-            case 'ArrowRight': movePlayer(1, 0, 'right'); break;
+            case 'ArrowUp': movePlayer(0, -1, 'up'); moved = true; break;
+            case 'ArrowDown': movePlayer(0, 1, 'down'); moved = true; break;
+            case 'ArrowLeft': movePlayer(-1, 0, 'left'); moved = true; break;
+            case 'ArrowRight': movePlayer(1, 0, 'right'); moved = true; break;
         }
+        if (moved) playSound('move');
     });
 
     function movePlayer(dx, dy, direction) {
@@ -124,10 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function isValidPath(x, y) {
         const tile = gardenLayout[y][x];
-        return tile === 1 || tile === 4; // Can walk on path or bench
+        // Block fences, trees, and flowers
+        return tile !== 8 && tile !== 5 && tile !== 6 && tile !== 2 && tile !== 3 && tile !== 4;
     }
 
     function drawGame() {
+        if (!gameStarted) return; // Don't draw if images aren't loaded
+
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -137,39 +175,70 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tile = gardenLayout[y][x];
                 let img;
                 switch(tile) {
-                    case 0: img = grassImg; break;
-                    case 1: img = pathImg; break;
-                    case 2: img = flower1Img; break;
-                    case 3: img = flower2Img; break;
-                    case 4: img = flower3Img; break;
-                    case 5: img = treeImg; break;
-                    case 6: img = tree1Img; break;
-                    case 7: img = benchImg; break;
-                    case 8: img = fenceImg; break;
+                    case 0: img = images.grass; break;
+                    case 1: img = images.path; break;
+                    case 2: img = images.flower1; break;
+                    case 3: img = images.flower2; break;
+                    case 4: img = images.flower3; break;
+                    case 5: img = images.tree; break;
+                    case 6: img = images.tree1; break;
+                    case 7: img = images.bench; break;
+                    case 8: img = images.fence; break;
                 }
-                ctx.drawImage(img, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                if (img && img.complete && img.naturalWidth !== 0) {
+                    ctx.drawImage(img, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                } else {
+                    // Fallback: draw a colored rectangle and log missing image
+                    ctx.fillStyle = '#ccc';
+                    ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    if (img) {
+                        console.warn('Image not loaded for tile', tile, 'at', x, y);
+                    } else {
+                        console.warn('No image assigned for tile', tile, 'at', x, y);
+                    }
+                }
             }
         }
 
         // Draw decorative elements
         decorations.forEach(dec => {
-            ctx.drawImage(dec.img, dec.x * TILE_SIZE, dec.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            if (dec.img && dec.img.complete && dec.img.naturalWidth !== 0) {
+                ctx.drawImage(dec.img, dec.x * TILE_SIZE, dec.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            } else {
+                ctx.fillStyle = '#ffb';
+                ctx.fillRect(dec.x * TILE_SIZE, dec.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                console.warn('Decoration image not loaded at', dec.x, dec.y);
+            }
         });
 
         // Draw RSVP book
-        ctx.drawImage(rsvpBookImg, rsvpBookPosition.x * TILE_SIZE, rsvpBookPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        if (images.rsvpBook && images.rsvpBook.complete && images.rsvpBook.naturalWidth !== 0) {
+            ctx.drawImage(images.rsvpBook, rsvpBookPosition.x * TILE_SIZE, rsvpBookPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        } else {
+            ctx.fillStyle = '#fbb';
+            ctx.fillRect(rsvpBookPosition.x * TILE_SIZE, rsvpBookPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            console.warn('RSVP book image not loaded');
+        }
 
         // Draw player
-        ctx.drawImage(playerImg, playerPosition.x * TILE_SIZE, playerPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        if (images.player && images.player.complete && images.player.naturalWidth !== 0) {
+            ctx.drawImage(images.player, playerPosition.x * TILE_SIZE, playerPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        } else {
+            ctx.fillStyle = '#bbf';
+            ctx.fillRect(playerPosition.x * TILE_SIZE, playerPosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            console.warn('Player image not loaded');
+        }
     }
 
     function showRSVPPopup() {
-        gameStarted = false;
+        playSound('success');
         rsvpPopup.style.display = 'flex';
+        gameStarted = false;
     }
 
     // RSVP functionality
     attendingBtn.addEventListener('click', () => {
+        playSound('click');
         rsvpStatus = 'attending';
         saveRSVPStatus(rsvpStatus);
         updateRSVPButtons();
@@ -180,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     notAttendingBtn.addEventListener('click', () => {
+        playSound('click');
         rsvpStatus = 'not-attending';
         saveRSVPStatus(rsvpStatus);
         updateRSVPButtons();
@@ -189,6 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Guest counter functionality
     decrementBtn.addEventListener('click', () => {
+        playSound('click');
         if (guestCount > 0) {
             guestCount--;
             countDisplay.textContent = guestCount;
@@ -197,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     incrementBtn.addEventListener('click', () => {
+        playSound('click');
         if (guestCount < 100) {
             guestCount++;
             countDisplay.textContent = guestCount;
@@ -240,6 +312,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadRSVPStatus() {
         return localStorage.getItem('rsvpStatus') || '';
+    }
+
+    // Add close button functionality for RSVP popup
+    const closePopupBtn = document.getElementById('close-popup');
+    if (closePopupBtn) {
+        closePopupBtn.addEventListener('click', () => {
+            playSound('click');
+            hideRSVPPopup();
+            gameStarted = true;
+            drawGame();
+        });
+    }
+
+    function playSound(sound) {
+        if (audio[sound]) {
+            const clone = audio[sound].cloneNode();
+            clone.play();
+        }
     }
 
     // Start the game
